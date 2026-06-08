@@ -13,7 +13,6 @@ import (
 
 	"github.com/krakend/krakend-otel/config"
 	"github.com/krakend/krakend-otel/exporter/otelcollector"
-	"github.com/krakend/krakend-otel/exporter/prometheus"
 )
 
 // MetricReader is the interface required in order to
@@ -50,18 +49,6 @@ func CreateOTLPExporters(ctx context.Context, otlpConfs []config.OTLPExporter) (
 	return m, s, nil
 }
 
-func CreatePrometheusExporters(ctx context.Context, promConfs []config.PrometheusExporter) (map[string]MetricReader, error) {
-	m := make(map[string]MetricReader, len(promConfs))
-	for idx, ecfg := range promConfs {
-		c, err := prometheus.Exporter(ctx, ecfg)
-		if err != nil {
-			return nil, fmt.Errorf("prometheus exporter %s (at idx %d) failed: %s", ecfg.Name, idx, err.Error())
-		}
-		m[ecfg.Name] = c
-	}
-	return m, nil
-}
-
 // Instances create instances for a given configuration.
 func Instances(ctx context.Context, cfg *config.ConfigData) (map[string]MetricReader, map[string]SpanExporter, error) {
 	// Create OTLP (OpenTelemetry Line Protocol) exporters
@@ -69,14 +56,7 @@ func Instances(ctx context.Context, cfg *config.ConfigData) (map[string]MetricRe
 	if err != nil {
 		return nil, nil, err
 	}
-	// Create Prometheus exporters
-	pm, err := CreatePrometheusExporters(ctx, cfg.Exporters.Prometheus)
-	if err != nil {
-		return nil, nil, err
-	}
-	for k, v := range pm {
-		m[k] = v
-	}
+	// Prometheus exporters intentionally removed (no-prometheus policy).
 	return m, s, nil
 }
 
