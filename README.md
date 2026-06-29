@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="krakend-otel" width="880"></p>
+
 # KrakenD OpenTelemetry (`krakend-otel`)
 OpenTelemetry building blocks to instrument [KrakenD](https://www.krakend.io) and [Lura](https://luraproject.org/) based API Gateways.
 
